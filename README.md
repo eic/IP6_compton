@@ -1,15 +1,14 @@
-# Geant simulation of luminosity monitor for the EIC at BNL
+# Geant simulation of Compton polarimeter in IP6 for the EIC at BNL
 
 ## Dependencies
 
 - Geat 4
 - ROOT 5/6
-- boost (already required by ROOT)
 
 ## Steps to checkout the repository and compile
 
-<pre><code> git clone https://github.com/adamjaro/lmon.git </pre></code>
-<pre><code> cd lmon </pre></code>
+<pre><code> git clone https://github.com/ZhengqiaoZhang/IP6_compton.git </pre></code>
+<pre><code> cd IP6_compton </pre></code>
 <pre><code> mkdir build </pre></code>
 <pre><code> cd build </pre></code>
 <pre><code> cmake ../ </pre></code>
