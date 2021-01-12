@@ -1,4 +1,0 @@
-/Users/zhengqiao/test_geant4/test/build/CMakeFiles/rebuild_cache.dir
-/Users/zhengqiao/test_geant4/test/build/CMakeFiles/edit_cache.dir
-/Users/zhengqiao/test_geant4/test/build/CMakeFiles/run.dir
-/Users/zhengqiao/test_geant4/test/build/CMakeFiles/det.dir
