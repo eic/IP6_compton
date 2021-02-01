@@ -61,7 +61,7 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
   if(fUseBeam){
     auto fParticleGun = new G4ParticleGun(1);
     G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* particle = particleTable->FindParticle("gamma");
+    G4ParticleDefinition* particle = particleTable->FindParticle("e-");
     fParticleGun->SetParticleDefinition(particle);
     fParticleGun->SetParticlePosition(G4ThreeVector(fBeamVX,fBeamVY,fBeamVZ));
     G4ThreeVector beamDir(fBeamPx,fBeamPy,fBeamPz);
