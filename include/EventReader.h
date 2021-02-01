@@ -31,9 +31,11 @@ class EventReader : public G4VUserPrimaryGeneratorAction {
     G4String fInputName; // name of input file
 
     G4GenericMessenger *fMsg; // messenger for name of input file
-
+    
     int fIev; // event number for progress printout
 
+    int fUseBeam;
+    double fBeamE,fBeamVX,fBeamVY,fBeamVZ,fBeamPx,fBeamPy,fBeamPz;
 };
 
 #endif

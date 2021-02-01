@@ -19,11 +19,16 @@
 //local headers
 #include "EventReader.h"
 #include "ParticleReader.h"
+#include "G4ParticleGun.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
 
 using namespace std;
 
 //_____________________________________________________________________________
-EventReader::EventReader() : G4VUserPrimaryGeneratorAction(), fIev(0) {
+EventReader::EventReader() : G4VUserPrimaryGeneratorAction(), fIev(0), 
+			     fUseBeam(0), fBeamE(5), fBeamVX(0), fBeamVY(0), fBeamVZ(0),
+			     fBeamPx(0),fBeamPy(0),fBeamPz(1){
 
   //default input name
   fInputName = "../events.dat";
@@ -32,10 +37,43 @@ EventReader::EventReader() : G4VUserPrimaryGeneratorAction(), fIev(0) {
   fMsg = new G4GenericMessenger(this, "/EPol/input/");
   fMsg->DeclareProperty("name", fInputName);
 
+  //set use beam flag
+  fMsg->DeclareProperty("useBeam", fUseBeam);
+  fMsg->DeclarePropertyWithUnit("beamEnergy","GeV",fBeamE,"beam energy for particle gun");
+  fMsg->DeclarePropertyWithUnit("beamVx", "cm",fBeamVX,"initial vertex position x");
+  fMsg->DeclarePropertyWithUnit("beamVy", "cm",fBeamVY,"initial vertex position y");
+  fMsg->DeclarePropertyWithUnit("beamVz", "cm",fBeamVZ,"initial vertex position z");
+  fMsg->DeclareProperty("beamPx", fBeamPx);
+  fMsg->DeclareProperty("beamPy", fBeamPy);
+  fMsg->DeclareProperty("beamPz", fBeamPz);
+
 }//EventReader
 
 //_____________________________________________________________________________
 void EventReader::GeneratePrimaries(G4Event *evt) {
+
+  //increment event count for progress printout
+  fIev++;
+  if( fIev%100000 == 0 ) {
+    G4cout << "EventReader::GeneratePrimaries, event number: " << fIev << G4endl;
+  }
+
+  if(fUseBeam){
+    auto fParticleGun = new G4ParticleGun(1);
+    G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+    G4ParticleDefinition* particle = particleTable->FindParticle("gamma");
+    fParticleGun->SetParticleDefinition(particle);
+    fParticleGun->SetParticlePosition(G4ThreeVector(fBeamVX,fBeamVY,fBeamVZ));
+    G4ThreeVector beamDir(fBeamPx,fBeamPy,fBeamPz);
+    if(beamDir.mag() > 1){
+      G4cerr<<"Error: given momentum direction is not length of 1: "<<beamDir.mag()<<G4endl;
+      G4cerr<<"Error: not going to do anything"<<G4endl;
+      return;
+    }
+    fParticleGun->SetParticleMomentumDirection(beamDir);
+    fParticleGun->SetParticleEnergy(fBeamE);
+    return;
+  }
 
   //open COMRAD input
   if(!fIn.is_open()) OpenInput();
@@ -53,12 +91,6 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
     //G4cout << line << G4endl;
   }
 
-  //increment event count for progress printout
-  fIev++;
-  if( fIev%100000 == 0 ) {
-    G4cout << "EventReader::GeneratePrimaries, event number: " << fIev << G4endl;
-  }
-
   //get vertex coordinates, cm, and number of particles
   //getline(fIn, line);
   G4double vx, vy, vz; // cm
@@ -70,7 +102,7 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
 
   //make the primary vertex
   G4PrimaryVertex *vtx = new G4PrimaryVertex(vx*cm, vy*cm, vz*cm, 0);
-//  G4cout << "EventReader::GeneratePrimaries " << vx << " " << vy << " " << vz << " " << ntrk << G4endl;
+  //  G4cout << "EventReader::GeneratePrimaries " << vx << " " << vy << " " << vz << " " << ntrk << G4endl;
 
   //tracks in event
   vector<ParticleReader> tracks;
@@ -87,7 +119,7 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
   for(vector<ParticleReader>::iterator i = tracks.begin(); i != tracks.end(); i++) {
 
     //put the electron
-   if( (*i).GetPdg() == 11 ) tmap.insert( make_pair(11, &(*i)) );
+    if( (*i).GetPdg() == 11 ) tmap.insert( make_pair(11, &(*i)) );
 
     //photon
     if( (*i).GetPdg() == 22 ) tmap.insert( make_pair(22, &(*i)) );//qiao
@@ -101,7 +133,7 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
   tmap[22]->GenerateToVertex(vtx); //qiao
 
   //scattered electron
- tmap[11]->GenerateToVertex(vtx);
+  tmap[11]->GenerateToVertex(vtx);
 
   //put vertex to the event
   evt->AddPrimaryVertex(vtx);
