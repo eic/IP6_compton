@@ -45,7 +45,7 @@ set (DICT G__DET.cxx)
 set (CLING rootcint)
 set (LINKDEF LinkDef.h)
 #set (HDRS_DET Detector.h SensDetDummy.h ExitWinZEUS.h)
-set (HDRS_DET Detector.h)
+set (HDRS_DET Detector.h genericDet.h)
 
 #include for CLING
 get_directory_property(incdirs INCLUDE_DIRECTORIES)

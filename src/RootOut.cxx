@@ -68,7 +68,7 @@ void RootOut::Open() {
   }
 
   //output detector tree
-  fDetTree = new TTree("DetectorTree", "DetectorTree");
+  fDetTree = new TTree("t", "DetectorTree");
 
 }//Open
 

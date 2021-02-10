@@ -32,6 +32,7 @@
 #include "electronDet.h"
 #include "photonDet.h"
 #include "calBox.h"
+#include "genericDet.h"
 
 using namespace std;
 
@@ -159,7 +160,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
 // to study the recoil electron
 //		AddDetector(new electronDet("Edet_QD9",178.78630,0,-83845.821,0.0036928331,top_l));  //recoil electron detector
 		
-
+		AddDetector(new genericDet("gDetTst",515.59067,0,-60870-410.712,-0.0103371112 ,250,1, top_l));  //recoil electron detector
 
 
 
@@ -186,12 +187,11 @@ void DetectorConstruction::BeginEvent(const G4Event *evt) const {
 
 //_____________________________________________________________________________
 void DetectorConstruction::FinishEvent() const {
-
-	//detector loop
-	std::for_each(fDet->begin(), fDet->end(), std::mem_fun( &Detector::FinishEvent ));
-
-	//fill the output tree
-	fOut->FillTree();
+  //detector loop
+  std::for_each(fDet->begin(), fDet->end(), std::mem_fun( &Detector::FinishEvent ));
+  
+  //fill the output tree
+  fOut->FillTree();
 
 }//WriteEvent
 
