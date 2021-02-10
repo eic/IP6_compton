@@ -70,7 +70,7 @@ G4bool genericDet::ProcessHits(G4Step *step, G4TouchableHistory*) {
 
   //remove the track
   G4Track *track = step->GetTrack();
-  track->SetTrackStatus(fKillTrackAndSecondaries);
+  //track->SetTrackStatus(fKillTrackAndSecondaries);
 
   genHit thisHit;
   thisHit.e= track->GetTotalEnergy();
