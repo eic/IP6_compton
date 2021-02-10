@@ -58,7 +58,7 @@ endforeach()
 add_custom_command (
   OUTPUT ${DICT}
   COMMAND ${CLING}
-  ARGS -f ${DICT} -c -p ${dict_include}
+  ARGS -f ${DICT} ${dict_include}
   ${HDRS_DET} ${LINKDEF}
   DEPENDS  include/${LINKDEF}
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
