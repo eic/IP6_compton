@@ -105,7 +105,9 @@ void MCEvent::CreateOutput(TTree *tree) {
 
   DetUtils u("", tree);
 
-  u.AddBranch("phot_gen", &fPhotGen, "D");
+  u.AddBranch("pXsec", &fpXsec, "D");
+  u.AddBranch("uXsec", &fuXsec, "D");
+
   u.AddBranch("phot_theta", &fPhotTheta, "D");
   u.AddBranch("phot_phi", &fPhotPhi, "D");
 
@@ -122,6 +124,8 @@ void MCEvent::CreateOutput(TTree *tree) {
 //_____________________________________________________________________________
 void MCEvent::ClearEvent() {
 
+  // fpXsec = 0.;//for whatever reason we clear the event at the beginning of the event so if you uncomment these the values are lost
+  // fuXsec = 0.;
   fPhotGen = 0.;
   fPhotTheta = 0.;
   fPhotPhi = 0.;

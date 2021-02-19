@@ -51,7 +51,8 @@ int main(int argc, char* argv[]) {
   G4RunManager *runManager = new G4RunManager;
 
   //detector construction
-  runManager->SetUserInitialization(new DetectorConstruction);
+  auto detConst = new DetectorConstruction();
+  runManager->SetUserInitialization(detConst);
 
   //physics
   FTFP_BERT *physicsList = new FTFP_BERT;
@@ -60,7 +61,7 @@ int main(int argc, char* argv[]) {
   runManager->SetUserInitialization(physicsList);
 
   //action
-  runManager->SetUserInitialization(new ActionInitialization);
+  runManager->SetUserInitialization(new ActionInitialization(detConst));
 
   //visualization
   G4VisExecutive *visManager = new G4VisExecutive;
@@ -91,32 +92,3 @@ int main(int argc, char* argv[]) {
   return 0;
 
 }//main
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

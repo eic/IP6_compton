@@ -17,7 +17,7 @@ void ActionInitialization::Build() const {
 
   //select the generator
   //SetUserAction(new GeneratorAction);
-  SetUserAction(new EventReader);
+  SetUserAction(new EventReader(fDetConst));
   SetUserAction(new EventAction);
   SetUserAction(new RunAction);
 

@@ -30,8 +30,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
     void FinishEvent() const;
 
     void CreateOutput() const;
-
     void ConstructSDandField();
+
+    MCEvent *getMCEvent(){return fMC;}
 
   private:
 
