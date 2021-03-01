@@ -52,7 +52,7 @@ DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction(), fD
   fMC = new MCEvent();
   AddDetector(fMC);
 
-  magFile = "../polarimeter_magnet.dat";
+  magFile = "../polarimeter_magnet.dat.5GeV";
   
   //messenger for detectors and components
   fMsg = new G4GenericMessenger(this, "/EPol/construct/");
