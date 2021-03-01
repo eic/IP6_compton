@@ -160,7 +160,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
   // to study the recoil electron
   //		AddDetector(new electronDet("Edet_QD9",178.78630,0,-83845.821,0.0036928331,top_l));  //recoil electron detector
 		
-  AddDetector(new genericDet("gDetTst",515.59067,0,-60870-410.712,-0.0103371112 ,250,1, top_l));  //recoil electron detector
+  AddDetector(new genericDet("gDet",515.59067,0,-60870-410.712,-0.0103371112 ,500,1, top_l));  //recoil electron detector
+  AddDetector(new genericDet("bQ9EF",178.78630,0,-83845        ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
+  AddDetector(new genericDet("aQ9EF",178.78630,0,-82845        ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
+
+
+  AddDetector(new genericDet("bD22EF",199,0,-90607+1600   ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
+  AddDetector(new genericDet("aD22EF",199,0,-90607-1600   ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
+  AddDetector(new genericDet("aQ10EF",199,0,-88345+360    ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
 
 
 
