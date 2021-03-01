@@ -13,14 +13,16 @@
 <pre><code> cd build </pre></code>
 <pre><code> cmake ../ </pre></code>
 <pre><code> make </pre></code>
+<pre><code> cd ../ </pre></code>
 
 ## Run
+By default run the simulation from the main directory.
 
 - Run as a batch job for a given number of events
 
-<pre><code> ./run run.mac </pre></code>
+<pre><code> ./build/run run.mac </pre></code>
 
 - Or run with visualization
 
-<pre><code> ./run </pre></code>
+<pre><code> ./build/run </pre></code>
 

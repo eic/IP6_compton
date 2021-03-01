@@ -26,7 +26,7 @@ using namespace std;
 EventReader::EventReader(DetectorConstruction *dc) : G4VUserPrimaryGeneratorAction(), fIev(0) {
 
   //default input name
-  fInputName = "../events.dat";
+  fInputName = "events.dat";
   //command for name of input file
   fMsg = new G4GenericMessenger(this, "/EPol/input/");
   fMsg->DeclareProperty("name", fInputName);
