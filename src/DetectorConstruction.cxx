@@ -52,12 +52,14 @@ DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction(), fD
   fMC = new MCEvent();
   AddDetector(fMC);
 
-
+  magFile = "../polarimeter_magnet.dat";
+  
   //messenger for detectors and components
   fMsg = new G4GenericMessenger(this, "/EPol/construct/");
   fMsg->DeclareProperty("B2eR", fIncB2eR);
   fMsg->DeclareProperty("QF1", fIncQF1);
-
+  fMsg->DeclareProperty("magFile",magFile);
+  
 }//DetectorConstruction
 
 //_____________________________________________________________________________
@@ -93,7 +95,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
   //beamline magnet
   //if(fIncB2eR) new BeamMagnet(-12.254*meter, top_l);
   ifstream magfile;
-  magfile.open("../polarimeter_magnet.dat");
+  magfile.open(magFile.data());
 
   string line;
 

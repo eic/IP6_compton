@@ -44,6 +44,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
 
     MCEvent *fMC; // generated particles
 
+  G4String magFile;
     G4GenericMessenger *fMsg; // messenger for detectors and components
     G4bool fIncMagnet; // flag for spectrometer magnet
     G4bool fIncB2eR; // beamline dipole magnet

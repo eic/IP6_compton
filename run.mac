@@ -4,9 +4,17 @@
 #detectors and components
 
 
+# /EPol/construct/magFile ../polarimeter_magnet.dat.5GeV
+# /EPol/input/name /newVolatile/halla/moller12gev/ciprian/tmp/compton/e5GeV_g532nm_Pz98.ev
 
+#/EPol/construct/magFile ../polarimeter_magnet.dat.10GeV
+#/EPol/input/name /newVolatile/halla/moller12gev/ciprian/tmp/compton/e10GeV_g532nm_Pz91.ev
+
+/EPol/construct/magFile ../polarimeter_magnet.dat.18GeV
+/EPol/input/name /newVolatile/halla/moller12gev/ciprian/tmp/compton/e18GeV_g532nm_Pz71.ev
 
 # Initialize kernel
 /run/initialize
-/run/beamOn 10
+/compton/output/name compton18GeV_1e6.root
+/run/beamOn 1000000
 
