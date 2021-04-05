@@ -19,11 +19,17 @@
 #include "EventReader.h"
 #include "ParticleReader.h"
 #include "MCEvent.h"
+#include "G4ParticleGun.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
 
 using namespace std;
 
 //_____________________________________________________________________________
-EventReader::EventReader(DetectorConstruction *dc) : G4VUserPrimaryGeneratorAction(), fIev(0) {
+EventReader::EventReader(DetectorConstruction *dc) : 
+  G4VUserPrimaryGeneratorAction(), fIev(0), 
+  fUseBeam(0), fBeamE(5), fBeamVX(0), fBeamVY(0), fBeamVZ(0),
+  fBeamPx(0),fBeamPy(0),fBeamPz(1){
 
   //default input name
   fInputName = "events.dat";
@@ -33,10 +39,43 @@ EventReader::EventReader(DetectorConstruction *dc) : G4VUserPrimaryGeneratorActi
 
   fDetConst = dc;
 
+  //set use beam flag
+  fMsg->DeclareProperty("useBeam", fUseBeam);
+  fMsg->DeclarePropertyWithUnit("beamEnergy","GeV",fBeamE,"beam energy for particle gun");
+  fMsg->DeclarePropertyWithUnit("beamVx", "cm",fBeamVX,"initial vertex position x");
+  fMsg->DeclarePropertyWithUnit("beamVy", "cm",fBeamVY,"initial vertex position y");
+  fMsg->DeclarePropertyWithUnit("beamVz", "cm",fBeamVZ,"initial vertex position z");
+  fMsg->DeclareProperty("beamPx", fBeamPx);
+  fMsg->DeclareProperty("beamPy", fBeamPy);
+  fMsg->DeclareProperty("beamPz", fBeamPz);
+
 }//EventReader
 
 //_____________________________________________________________________________
 void EventReader::GeneratePrimaries(G4Event *evt) {
+
+  //increment event count for progress printout
+  fIev++;
+  if( fIev%100000 == 0 ) {
+    G4cout << "EventReader::GeneratePrimaries, event number: " << fIev << G4endl;
+  }
+
+  if(fUseBeam){
+    auto fParticleGun = new G4ParticleGun(1);
+    G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+    G4ParticleDefinition* particle = particleTable->FindParticle("e-");
+    fParticleGun->SetParticleDefinition(particle);
+    fParticleGun->SetParticlePosition(G4ThreeVector(fBeamVX,fBeamVY,fBeamVZ));
+    G4ThreeVector beamDir(fBeamPx,fBeamPy,fBeamPz);
+    if(beamDir.mag() > 1){
+      G4cerr<<"Error: given momentum direction is not length of 1: "<<beamDir.mag()<<G4endl;
+      G4cerr<<"Error: not going to do anything"<<G4endl;
+      return;
+    }
+    fParticleGun->SetParticleMomentumDirection(beamDir);
+    fParticleGun->SetParticleEnergy(fBeamE);
+    return;
+  }
 
   //open COMRAD input
   if(!fIn.is_open()) OpenInput();
@@ -52,12 +91,6 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
 
     getline(fIn, line);
     //G4cout << line << G4endl;
-  }
-
-  //increment event count for progress printout
-  fIev++;
-  if( fIev%100000 == 0 ) {
-    G4cout << "EventReader::GeneratePrimaries, event number: " << fIev << G4endl;
   }
 
   //get vertex coordinates, cm, and number of particles
