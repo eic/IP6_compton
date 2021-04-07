@@ -1,0 +1,23 @@
+
+/EPol/construct/magFile polarimeter_magnet.dat.5GeV
+/EPol/input/name o_deleteMe.root
+
+#run macro for local testing
+/vis/scene/add/axes 18.5446 0 -9280.5 100 cm
+/vis/viewer/addCutawayPlane 0 0 0 m 0 -1 0
+
+#detectors and components
+/EPol/input/useBeam 1
+/EPol/input/beamEnergy 5 GeV
+/EPol/input/beamVx 18.5466 cm
+/EPol/input/beamVy 0 cm
+/EPol/input/beamVz -9290.5 cm
+/EPol/input/beamPx 0.010336927
+/EPol/input/beamPy 0
+/EPol/input/beamPz 0.99994657
+
+# Initialize kernel
+/run/initialize
+/run/beamOn 1
+
+/vis/viewer/refresh
