@@ -59,92 +59,95 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
   if( fIev%100000 == 0 ) {
     G4cout << "EventReader::GeneratePrimaries, event number: " << fIev << G4endl;
   }
-
   if(fUseBeam){
-    auto fParticleGun = new G4ParticleGun(1);
-    G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* particle = particleTable->FindParticle("e-");
-    fParticleGun->SetParticleDefinition(particle);
-    fParticleGun->SetParticlePosition(G4ThreeVector(fBeamVX,fBeamVY,fBeamVZ));
+    G4PrimaryVertex *vtx = new G4PrimaryVertex(fBeamVX, fBeamVY, fBeamVZ, 0);
     G4ThreeVector beamDir(fBeamPx,fBeamPy,fBeamPz);
+
     if(beamDir.mag() > 1){
       G4cerr<<"Error: given momentum direction is not length of 1: "<<beamDir.mag()<<G4endl;
       G4cerr<<"Error: not going to do anything"<<G4endl;
       return;
     }
-    fParticleGun->SetParticleMomentumDirection(beamDir);
-    fParticleGun->SetParticleEnergy(fBeamE);
-    return;
-  }
+    const G4double eMass= 0.510998910 * MeV;
+    G4double p2 = sqrt(fBeamE*fBeamE - eMass*eMass);
+    beamDir *= p2/GeV;
+    std::ostringstream trk;
+    trk << "TRACK:  11 "<<beamDir.getX()<<"   "<<beamDir.getY()<<"   "<<beamDir.getZ();
+    // G4cout<<trk.str()<<G4endl;
+    // std::cin.ignore();
+    ParticleReader *beamElectron= new ParticleReader(trk.str());
+    beamElectron->GenerateToVertex(vtx);
+    evt->AddPrimaryVertex(vtx);
+  }else{
 
-  //open COMRAD input
-  if(!fIn.is_open()) OpenInput();
+    //open COMRAD input
+    if(!fIn.is_open()) OpenInput();
 
-  //load the next COMRAD event
-  string line;
-  while( line.find("EVENT") == string::npos ) {
+    //load the next COMRAD event
+    string line;
+    while( line.find("EVENT") == string::npos ) {
 
-    if( !fIn.good() ) {
-      G4cout << "EventReader::GeneratePrimaries: no more events" << G4endl;
-      return;
+      if( !fIn.good() ) {
+	G4cout << "EventReader::GeneratePrimaries: no more events" << G4endl;
+	return;
+      }
+
+      getline(fIn, line);
+      //G4cout << line << G4endl;
     }
 
-    getline(fIn, line);
+    //get vertex coordinates, cm, and number of particles
+    //getline(fIn, line);
+    G4double vx, vy, vz; // cm
+    G4double uXsec(0),pXsec(0);
+    int ntrk; // number of particles
+    ReadVertex(line, vx, vy, vz, uXsec, pXsec, ntrk); // read from the vertex line
+
+    fDetConst->getMCEvent()->SetPolXsec(pXsec);
+    fDetConst->getMCEvent()->SetUnpolXsec(uXsec);
+
+
     //G4cout << line << G4endl;
+    //G4cout << "EventReader::GeneratePrimaries " << vx << " " << vy << " " << vz << " " << ntrk << G4endl;
+
+    //make the primary vertex
+    G4PrimaryVertex *vtx = new G4PrimaryVertex(vx*cm, vy*cm, vz*cm, 0);
+    //  G4cout << "EventReader::GeneratePrimaries " << vx << " " << vy << " " << vz << " " << ntrk << G4endl;
+
+    //tracks in event
+    std::vector<ParticleReader> tracks;
+
+    //particle loop
+    for(int itrk=0; itrk<ntrk; itrk++) {
+
+      getline(fIn, line);
+      tracks.push_back( ParticleReader(line) );
+    }//particle loop
+
+    //put tracks to map according to pdg
+    map<G4int, ParticleReader*> tmap;
+    for(std::vector<ParticleReader>::iterator i = tracks.begin(); i != tracks.end(); i++) {
+
+      //put the electron
+      if( (*i).GetPdg() == 11 ) tmap.insert( make_pair(11, &(*i)) );
+
+      //photon
+      if( (*i).GetPdg() == 22 ) tmap.insert( make_pair(22, &(*i)) );//qiao
+
+      //G4cout << "EventReader::GeneratePrimaries: " << (*i).GetPdg() << G4endl;
+    }
+
+    //G4cout << "EventReader::GeneratePrimaries: " << tmap[11]->GetPdg() << " " << tmap[22]->GetPdg() << G4endl;
+
+    //generate the photon
+    tmap[22]->GenerateToVertex(vtx); //qiao
+
+    //scattered electron
+    tmap[11]->GenerateToVertex(vtx);
+
+    //put vertex to the event
+    evt->AddPrimaryVertex(vtx);
   }
-
-  //get vertex coordinates, cm, and number of particles
-  //getline(fIn, line);
-  G4double vx, vy, vz; // cm
-  G4double uXsec(0),pXsec(0);
-  int ntrk; // number of particles
-  ReadVertex(line, vx, vy, vz, uXsec, pXsec, ntrk); // read from the vertex line
-
-  fDetConst->getMCEvent()->SetPolXsec(pXsec);
-  fDetConst->getMCEvent()->SetUnpolXsec(uXsec);
-
-
-  //G4cout << line << G4endl;
-  //G4cout << "EventReader::GeneratePrimaries " << vx << " " << vy << " " << vz << " " << ntrk << G4endl;
-
-  //make the primary vertex
-  G4PrimaryVertex *vtx = new G4PrimaryVertex(vx*cm, vy*cm, vz*cm, 0);
-  //  G4cout << "EventReader::GeneratePrimaries " << vx << " " << vy << " " << vz << " " << ntrk << G4endl;
-
-  //tracks in event
-  std::vector<ParticleReader> tracks;
-
-  //particle loop
-  for(int itrk=0; itrk<ntrk; itrk++) {
-
-    getline(fIn, line);
-    tracks.push_back( ParticleReader(line) );
-  }//particle loop
-
-  //put tracks to map according to pdg
-  map<G4int, ParticleReader*> tmap;
-  for(std::vector<ParticleReader>::iterator i = tracks.begin(); i != tracks.end(); i++) {
-
-    //put the electron
-    if( (*i).GetPdg() == 11 ) tmap.insert( make_pair(11, &(*i)) );
-
-    //photon
-    if( (*i).GetPdg() == 22 ) tmap.insert( make_pair(22, &(*i)) );//qiao
-
-    //G4cout << "EventReader::GeneratePrimaries: " << (*i).GetPdg() << G4endl;
-  }
-
-  //G4cout << "EventReader::GeneratePrimaries: " << tmap[11]->GetPdg() << " " << tmap[22]->GetPdg() << G4endl;
-
-  //generate the photon
-  tmap[22]->GenerateToVertex(vtx); //qiao
-
-  //scattered electron
-  tmap[11]->GenerateToVertex(vtx);
-
-  //put vertex to the event
-  evt->AddPrimaryVertex(vtx);
-
 }//GeneratePrimaries
 
 //_____________________________________________________________________________
