@@ -167,8 +167,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
   AddDetector(new genericDet("aQ9EF",178.78630,0,-82845        ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
 
 
-  AddDetector(new genericDet("bD22EF",199,0,-90607+1600   ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
-  AddDetector(new genericDet("aD22EF",199,0,-90607-1600   ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
+  AddDetector(new genericDet("aD22EF",199,0,-90607+1600   ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
+  AddDetector(new genericDet("bD22EF",199,0,-90607-1600   ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
   AddDetector(new genericDet("aQ10EF",199,0,-88345+360    ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
 
 
