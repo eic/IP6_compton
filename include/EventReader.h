@@ -38,7 +38,8 @@ class EventReader : public G4VUserPrimaryGeneratorAction {
     DetectorConstruction *fDetConst;
 
     int fUseBeam;
-    double fBeamE,fBeamVX,fBeamVY,fBeamVZ,fBeamPx,fBeamPy,fBeamPz;
+    double fBeamE,fvertexRotY;
+    double fvertexPosX,fvertexPosY,fvertexPosZ;
 };
 
 #endif
