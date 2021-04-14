@@ -37,29 +37,15 @@ ParticleReader::ParticleReader(G4int pdg): fPdg(pdg), fPx(0), fPy(0), fPz(0), fV
 //_____________________________________________________________________________
 ParticleReader::ParticleReader(const std::string &txlin): fVx(0), fVy(0), fVz(0) {
 
-  // constructor from a TX track line
-
-  //G4cout << "ParticleReader::ParticleReader: " << txlin << G4endl;
-
-  //split the track line
-
   //get the momentum
- stringstream ss(txlin);
- string cc1;
- int pdg;
- ss>>cc1;
- ss>>fPdg;
- ss>>fPx;
- ss>>fPy;
- ss>>fPz;
-
-//fPx = 0.03;
-//fPy = 0.002;
-//fPz = -4;
-
-  //get pdg
- // for(int i=0; i<3; i++) ++trk_it;
-   //fPdg = 11;
+  stringstream ss(txlin);
+  string cc1;
+  int pdg;
+  ss>>cc1;
+  ss>>fPdg;
+  ss>>fPx;
+  ss>>fPy;
+  ss>>fPz;
 
   //definition from the pdg
   fDef = G4ParticleTable::GetParticleTable()->FindParticle(fPdg);
@@ -67,8 +53,6 @@ ParticleReader::ParticleReader(const std::string &txlin): fVx(0), fVy(0), fVz(0)
   //mass and charge from the definition
   fMass = fDef->GetPDGMass();
   fCharge = fDef->GetPDGCharge();
-
-//  G4cout << "ParticleReader::ParticleReader: " << fPx << " " << fPy << " " << fPz << " " << fPdg << G4endl;
 
 }//ParticleReader
 
