@@ -73,19 +73,3 @@ target_link_libraries(${LIB} ${Geant4_LIBRARIES} ${ROOT_DEPS})
 add_executable(${BIN} run.cxx)
 target_link_libraries(${BIN} ${Geant4_LIBRARIES} ${LIB} ${BOOST_LIB})
 
-#copy macros to build directory
-set(MACRO
-  gui.mac
-  init_vis.mac
-  vis.mac
-  run.mac
-)
-
-foreach(_mac ${MACRO})
-  configure_file(
-    ${PROJECT_SOURCE_DIR}/${_mac}
-    ${PROJECT_BINARY_DIR}/${_mac}
-    COPYONLY
-  )
-endforeach()
-
