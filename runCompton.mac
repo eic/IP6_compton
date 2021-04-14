@@ -1,17 +1,5 @@
-
-#run macro for local testing
-
-#detectors and components
-
-
 /EPol/construct/magFile polarimeter_magnet.dat.5GeV
-/EPol/input/name /phenix/spin/phnxsp01/ciprian/eic/comptonOut/genIP6/e5GeV_g532nm_Pz98.ev
-
-#/EPol/construct/magFile polarimeter_magnet.dat.10GeV
-#/EPol/input/name /newVolatile/halla/moller12gev/ciprian/tmp/compton/e10GeV_g532nm_Pz91.ev
-
-#/EPol/construct/magFile polarimeter_magnet.dat.18GeV
-#/EPol/input/name /phenix/spin/phnxsp01/ciprian/eic/comptonOut/genIP6/e18GeV_g532nm_Pz71.cr
+/EPol/input/name e18GeV_g532nm_Pz71_1e2ev.cr
 
 /EPol/input/vertexPosX 18.5466 cm
 /EPol/input/vertexPosY 0 cm
@@ -20,6 +8,6 @@
 
 # Initialize kernel
 /run/initialize
-/compton/output/name /phenix/spin/phnxsp01/ciprian/eic/comptonOut/genIP6/compton5GeV12digit_1e6.root
-/run/beamOn 1000000
+/compton/output/name o_deleteMe.root
+/run/beamOn 100
 
