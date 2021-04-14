@@ -17,7 +17,6 @@
 
 //local headers
 #include "EventReader.h"
-#include "ParticleReader.h"
 #include "MCEvent.h"
 #include "G4ParticleGun.hh"
 #include "G4ParticleDefinition.hh"
