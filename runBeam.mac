@@ -1,20 +1,24 @@
 
 #run macro for local testing
-/EPol/construct/magFile polarimeter_magnet.dat.5GeV
-/EPol/input/name o_deleteMe.root
+# /EPol/construct/magFile polarimeter_magnet.dat.5GeV
+# /EPol/input/beamEnergy 5 GeV
+
+# /EPol/construct/magFile polarimeter_magnet.dat.10GeV
+# /EPol/input/beamEnergy 10 GeV
+
+/EPol/construct/magFile polarimeter_magnet.dat.18GeV
+/EPol/input/beamEnergy 18 GeV
 
 #detectors and components
 /EPol/input/useBeam 1
-/EPol/input/beamEnergy 5 GeV
-/EPol/input/beamVx 18.5466 cm
-/EPol/input/beamVy 0 cm
-/EPol/input/beamVz -9290.5 cm
-/EPol/input/beamPx 0.010336927
-/EPol/input/beamPy 0
-/EPol/input/beamPz 0.99994657
+/EPol/input/vertexPosX 18.5466 cm
+/EPol/input/vertexPosY 0 cm
+/EPol/input/vertexPosZ -9290.5 cm
+#/EPol/input/vertexRotY 0.0103371112 rad
 
 
 # Initialize kernel
 /run/initialize
-/run/beamOn 100
+/compton/output/name beam18GeV_1e3.root
+/run/beamOn 1000
 
