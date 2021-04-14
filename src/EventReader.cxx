@@ -62,19 +62,14 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
   if(fUseBeam){
     G4PrimaryVertex *vtx = new G4PrimaryVertex(fBeamVX, fBeamVY, fBeamVZ, 0);
     G4ThreeVector beamDir(fBeamPx,fBeamPy,fBeamPz);
-
-    if(beamDir.mag() > 1){
-      G4cerr<<"Error: given momentum direction is not length of 1: "<<beamDir.mag()<<G4endl;
-      G4cerr<<"Error: not going to do anything"<<G4endl;
-      return;
-    }
+    //force normalization
+    beamDir /= beamDir.mag();
     const G4double eMass= 0.510998910 * MeV;
     G4double p2 = sqrt(fBeamE*fBeamE - eMass*eMass);
     beamDir *= p2/GeV;
+
     std::ostringstream trk;
     trk << "TRACK:  11 "<<beamDir.getX()<<"   "<<beamDir.getY()<<"   "<<beamDir.getZ();
-    // G4cout<<trk.str()<<G4endl;
-    // std::cin.ignore();
     ParticleReader *beamElectron= new ParticleReader(trk.str());
     beamElectron->GenerateToVertex(vtx);
     evt->AddPrimaryVertex(vtx);
@@ -140,7 +135,7 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
     //G4cout << "EventReader::GeneratePrimaries: " << tmap[11]->GetPdg() << " " << tmap[22]->GetPdg() << G4endl;
 
     //generate the photon
-    tmap[22]->GenerateToVertex(vtx); //qiao
+    tmap[22]->GenerateToVertex(vtx);
 
     //scattered electron
     tmap[11]->GenerateToVertex(vtx);
