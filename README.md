@@ -2,13 +2,13 @@
 
 ## Dependencies
 
-- Geat 4
+- Geant 4
 - ROOT 5/6
 
 ## Steps to checkout the repository and compile
 
-<pre><code> git clone https://github.com/ZhengqiaoZhang/IP6_compton.git </pre></code>
-<pre><code> cd IP6_compton </pre></code>
+<pre><code> git clone https://github.com/eic/compton.git </pre></code>
+<pre><code> cd compton </pre></code>
 <pre><code> mkdir build </pre></code>
 <pre><code> cd build </pre></code>
 <pre><code> cmake ../ </pre></code>
@@ -26,3 +26,5 @@ By default run the simulation from the main directory.
 
 <pre><code> ./build/run </pre></code>
 
+## Magnet files
+All objects in the simulation are defined in the magnet file, change magFile in init_vic.mac to specify the needed magnet file.

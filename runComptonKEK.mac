@@ -1,0 +1,17 @@
+/EPol/construct/magFile kek_magnet.dat
+/EPol/input/name e18GeV_g532nm_Pz71_1e2ev.cr
+
+/EPol/input/vertexPosX -4.44185 cm
+/EPol/input/vertexPosY 0 cm
+/EPol/input/vertexPosZ  4531.49785 cm
+/EPol/input/vertexRotY 0.00098307 rad
+
+# Run single electron
+/EPol/input/useBeam 1
+/EPol/input/beamEnergy 7 GeV
+
+# Initialize kernel
+/run/initialize
+/compton/output/name o_deleteMe.root
+/run/beamOn 100
+

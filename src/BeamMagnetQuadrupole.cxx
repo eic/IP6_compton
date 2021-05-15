@@ -27,7 +27,7 @@ BeamMagnetQuadrupole::BeamMagnetQuadrupole(G4String nam, G4double xpos,G4double 
 	Detector(), G4VSensitiveDetector(nam), fNam(nam) {
 
 		//conical inner core
-
+        G4cout << "  BeamMagnetQuadrupole: " << fNam << G4endl;
 
 		G4RotationMatrix* yRot = new G4RotationMatrix;
 		yRot->rotateY(angle*rad);

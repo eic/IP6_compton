@@ -108,7 +108,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
 
   string cc1,cc2;
 
-  G4double xpos,ypos,zpos,length,r1,r2,dout,angle,bfield,gradient;
+  G4double xpos,ypos,zpos,length,r1,r2,dout,angle,bfield,gradient,rot,xysize,zsize;
 
   int number = 0;
 
@@ -120,57 +120,138 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
 
     stringstream ss(line);
     ss>>cc1;
-    ss>>cc2;
-    ss>>xpos;
-    ss>>ypos;
-    ss>>zpos;
-    ss>>r1;
-    ss>>r2;
-    ss>>dout;
-    ss>>length;
-    ss>>angle;
-    ss>>bfield;
-    ss>>gradient;
-    G4cout << "test= ****************"<<endl;
-    G4cout << "read mag file" <<xpos<<" "<<ypos<<" "<<zpos<<" "<<length<<" "<<r1<<" "<<r2<<" "<<dout<<" "<<angle<<" "<<bfield<<" "<<endl;
+    G4cout << cc1 << endl;
     if(number!=8&&number!=9&&number!=10&&number!=14){
-      if(cc1=="DB")AddDetector(new BeamMagnetDipole(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,bfield*tesla, top_l));//add Dipole
-      if(cc1=="QF"){
-	G4cout << "read mag file" <<xpos<<" "<<ypos<<" "<<zpos<<" "<<length<<" "<<r1<<" "<<r2<<" "<<dout<<" "<<angle<<" "<<bfield<<" "<<endl;
-	AddDetector(new BeamMagnetQuadrupole(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter, 1,0,0,top_l));} //add Quadrupole
+        if(cc1=="CAL"){    
+        ss>>cc2;
+        ss>>xpos;
+        ss>>ypos;
+        ss>>zpos;
+        ss>>rot;
+        ss>>xysize;
+        ss>>zsize;
+        AddDetector(new calBox(cc2,xpos*mm,ypos*mm,zpos*mm,rot,xysize*mm,zsize*mm,top_l)); //add Calorimeter
+        }
+        if(cc1=="DET"){
+        ss>>cc2;
+        ss>>xpos;
+        ss>>ypos;
+        ss>>zpos;
+        ss>>rot;
+        ss>>xysize;
+        ss>>zsize;
+        AddDetector(new genericDet(cc2,xpos*mm,ypos*mm,zpos*mm,rot,xysize*mm,zsize*mm,top_l)); //add Generic Detector
+        }
+        if(cc1=="DETe"){
+        ss>>cc2;
+        ss>>xpos;
+        ss>>ypos;
+        ss>>zpos;
+        ss>>rot;
+        AddDetector(new electronDet(cc2,xpos*mm,ypos*mm,zpos*mm,rot,top_l)); //add Electron Detector
+        }
+        if(cc1=="DB"){
+        ss>>cc2;
+        ss>>xpos;
+        ss>>ypos;
+        ss>>zpos;
+        ss>>r1;
+        ss>>r2;
+        ss>>dout;
+        ss>>length;
+        ss>>angle;
+        ss>>bfield;
+        ss>>gradient;
+        AddDetector(new BeamMagnetDipole(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,bfield*tesla, top_l));//add Dipole
+        }
+        if(cc1=="QF"){
+        ss>>cc2;
+        ss>>xpos;
+        ss>>ypos;
+        ss>>zpos;
+        ss>>r1;
+        ss>>r2;
+        ss>>dout;
+        ss>>length;
+        ss>>angle;
+        ss>>bfield;
+        ss>>gradient;
+        AddDetector(new BeamMagnetQuadrupole(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter, 1,0,0,top_l)); //add Quadrupole
+        }
     }
     //8 9 10
-    if(number==8){
-      AddDetector(new BeamMagnetQuadrupole_cone(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter,0.09490926*meter,0.0125*meter,0.0125*meter,-14.029944,top_l));//add Quadrupole  0.014029944 shift 0.0042092594
+    else if(number==8){
+        ss>>cc2;
+        ss>>xpos;
+        ss>>ypos;
+        ss>>zpos;
+        ss>>r1;
+        ss>>r2;
+        ss>>dout;
+        ss>>length;
+        ss>>angle;
+        ss>>bfield;
+        ss>>gradient;
+        AddDetector(new BeamMagnetQuadrupole_cone(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter,0.09490926*meter,0.0125*meter,0.0125*meter,-14.029944,top_l));//add Quadrupole  0.014029944 shift 0.0042092594
     }
-    if(number==9){
+    else if(number==9){
+        ss>>cc2;
+        ss>>xpos;
+        ss>>ypos;
+        ss>>zpos;
+        ss>>r1;
+        ss>>r2;
+        ss>>dout;
+        ss>>length;
+        ss>>angle;
+        ss>>bfield;
+        ss>>gradient;
       AddDetector(new BeamMagnetQuadrupole_cone(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter,0.1706421*meter,0.02*meter,0.02*meter,-14.029944,top_l));
     }
-    if(number==10){
+    else if(number==10){
+        ss>>cc2;
+        ss>>xpos;
+        ss>>ypos;
+        ss>>zpos;
+        ss>>r1;
+        ss>>r2;
+        ss>>dout;
+        ss>>length;
+        ss>>angle;
+        ss>>bfield;
+        ss>>gradient;
       AddDetector(new BeamMagnetQuadrupole_cone(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter,0.2422421*meter,0.025*meter,0.025*meter,-14.029944,top_l));
     }
-    if(number==14){
-      AddDetector(new BeamMagnetQuadrupole(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter, 0.5,0.5,0.5,top_l));} //add Quadrupole
-
-
-
-
+    else if(number==14){
+        ss>>cc2;
+        ss>>xpos;
+        ss>>ypos;
+        ss>>zpos;
+        ss>>r1;
+        ss>>r2;
+        ss>>dout;
+        ss>>length;
+        ss>>angle;
+        ss>>bfield;
+        ss>>gradient;
+      AddDetector(new BeamMagnetQuadrupole(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter, 0.5,0.5,0.5,top_l)); //add Quadrupole
+    } 
   }
 
   //photon det
-  AddDetector(new calBox("Gdet_ecal",515.59067,0,-60870.712,-0.0103371112 ,250*mm,400*mm,top_l)); //add Ecal detector 32m from laser IP primary
+//    AddDetector(new calBox("Gdet_ecal",515.59067,0,-60870.712,-0.0103371112 ,250*mm,400*mm,top_l)); //add Ecal detector 32m from laser IP primary
   // to study the recoil electron
-  //		AddDetector(new electronDet("Edet_QD9",178.78630,0,-83845.821,0.0036928331,top_l));  //recoil electron detector
-		
-  AddDetector(new genericDet("gDet",515.59067,0,-60870-410.712,-0.0103371112 ,500,1, top_l));  //recoil electron detector
-  AddDetector(new genericDet("bQ9EF",178.78630,0,-83845        ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
-  AddDetector(new genericDet("aQ9EF",178.78630,0,-82845        ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
-
-
-  AddDetector(new genericDet("aD22EF",199,0,-90607+1600   ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
-  AddDetector(new genericDet("bD22EF",199,0,-90607-1600   ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
-  AddDetector(new genericDet("aQ10EF",199,0,-88345+360    ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
-
+//   		AddDetector(new electronDet("Edet_QD9",178.78630,0,-83845.821,0.0036928331,top_l));  //recoil electron detector
+// 		
+//   AddDetector(new genericDet("gDet",515.59067,0,-60870-410.712,-0.0103371112 ,500,1, top_l));  //recoil electron detector
+//   AddDetector(new genericDet("bQ9EF",178.78630,0,-83845        ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
+//   AddDetector(new genericDet("aQ9EF",178.78630,0,-82845        ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
+// 
+// 
+//   AddDetector(new genericDet("aD22EF",199,0,-90607+1600   ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
+//   AddDetector(new genericDet("bD22EF",199,0,-90607-1600   ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
+//   AddDetector(new genericDet("aQ10EF",199,0,-88345+360    ,-0.0103371112 ,500,1, top_l));  //recoil electron detector
+// 
 
 
 
