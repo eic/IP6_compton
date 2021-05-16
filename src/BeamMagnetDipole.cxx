@@ -36,6 +36,7 @@ BeamMagnetDipole::BeamMagnetDipole(G4String nam, G4double xpos,G4double ypos,G4d
 		//G4double length = 4.22367*meter;
 		//G4double r1 = 0.09*meter;
 		//G4double r2 = 0.09*meter;
+        G4cout << "  BeamMagnetDipole: " << fNam << G4endl;
 
 
 		G4RotationMatrix* yRot = new G4RotationMatrix;

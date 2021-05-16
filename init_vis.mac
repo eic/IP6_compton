@@ -13,6 +13,8 @@
 #detectors and components
 /EPol/construct/B2eR 1
 /EPol/construct/QF1 1
+#/EPol/construct/magFile kek_magnet.dat
+#/EPol/input/name e18GeV_g532nm_Pz71_1e2ev_KEK.cr
 
 #
 # Initialize kernel
