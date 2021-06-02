@@ -177,7 +177,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
         ss>>bfield;
         ss>>gradient;
         ss>>col1;
-        if(col1 == -7){
+        if(col1 == -7){ //-7 is a random invalid value for col1, so it will never be given in the mag file.
             AddDetector(new BeamMagnetQuadrupole(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter,1,0,0,top_l));
         }
         else{
