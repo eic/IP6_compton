@@ -10,11 +10,28 @@
 # Change the default number of threads (in multi-threaded mode)
 #/run/numberOfThreads 4
 
+#KEK world volume
+#/EPol/construct/worldVol_x 500000
+#/EPol/construct/worldVol_y 20 meter
+#/EPol/construct/worldVol_z 100000
+
 #detectors and components
 /EPol/construct/B2eR 1
 /EPol/construct/QF1 1
+/EPol/input/name e18GeV_g532nm_Pz71_1e2ev.cr
+
 #/EPol/construct/magFile kek_magnet.dat
-#/EPol/input/name e18GeV_g532nm_Pz71_1e2ev_KEK.cr
+#/EPol/input/name e7GeV_g532nm_Pz71_1e2ev_KEK.cr
+
+/EPol/input/vertexPosX -45104 cm
+/EPol/input/vertexPosY 0 cm
+/EPol/input/vertexPosZ 4531.49785 cm
+/EPol/input/vertexRotY 3.142575 rad
+
+#Run single electron
+#/EPol/input/useBeam 1
+#/EPol/input/beamEnergy 7 GeV
+
 
 #
 # Initialize kernel

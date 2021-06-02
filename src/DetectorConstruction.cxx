@@ -59,6 +59,9 @@ DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction(), fD
   fMsg->DeclareProperty("B2eR", fIncB2eR);
   fMsg->DeclareProperty("QF1", fIncQF1);
   fMsg->DeclareProperty("magFile",magFile);
+  fMsg->DeclarePropertyWithUnit("worldVol_x", "meter", worldVol_x);
+  fMsg->DeclarePropertyWithUnit("worldVol_y", "meter", worldVol_y);
+  fMsg->DeclarePropertyWithUnit("worldVol_z", "meter", worldVol_z);
   
 }//DetectorConstruction
 
@@ -81,14 +84,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
   G4Material* top_m = G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
 
   //top world volume
-  G4Box *top_s = new G4Box("top_s", 20*meter, 20*meter, 200*meter);
+  G4cout<< worldVol_x << endl;
+  G4Box *top_s = new G4Box("top_s", worldVol_x, worldVol_y, worldVol_z);
   //G4Box *top_s = new G4Box("top_s", 3*m, 3*m, 3*m);
   G4LogicalVolume *top_l = new G4LogicalVolume(top_s, top_m, "top_l");
   top_l->SetVisAttributes( G4VisAttributes::GetInvisible() );
   G4VPhysicalVolume *top_p = new G4PVPlacement(0, G4ThreeVector(), top_l, "top_p", 0, false, 0);
-
-
-
 
   //detectors
 
@@ -108,7 +109,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
 
   string cc1,cc2;
 
-  G4double xpos,ypos,zpos,length,r1,r2,dout,angle,bfield,gradient,rot,xysize,zsize;
+  G4double xpos,ypos,zpos,length,r1,r2,dout,angle,bfield,gradient,rot,xysize,zsize,col1=-7,col2,col3,shiftx,rx,ry,conerot; //-7 due to invalid value
 
   int number = 0;
 
@@ -121,8 +122,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     stringstream ss(line);
     ss>>cc1;
     G4cout << cc1 << endl;
-    if(number!=8&&number!=9&&number!=10&&number!=14){
-        if(cc1=="CAL"){    
+    if(cc1=="CAL"){    
         ss>>cc2;
         ss>>xpos;
         ss>>ypos;
@@ -130,9 +130,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
         ss>>rot;
         ss>>xysize;
         ss>>zsize;
-        AddDetector(new calBox(cc2,xpos*mm,ypos*mm,zpos*mm,rot,xysize*mm,zsize*mm,top_l)); //add Calorimeter
-        }
-        if(cc1=="DET"){
+        AddDetector(new calBox(cc2,xpos*meter,ypos*meter,zpos*meter,rot,xysize*mm,zsize*mm,top_l)); //add Calorimeter
+    }
+    if(cc1=="DET"){
         ss>>cc2;
         ss>>xpos;
         ss>>ypos;
@@ -140,17 +140,17 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
         ss>>rot;
         ss>>xysize;
         ss>>zsize;
-        AddDetector(new genericDet(cc2,xpos*mm,ypos*mm,zpos*mm,rot,xysize*mm,zsize*mm,top_l)); //add Generic Detector
-        }
-        if(cc1=="DETe"){
+        AddDetector(new genericDet(cc2,xpos*meter,ypos*meter,zpos*meter,rot,xysize*mm,zsize*mm,top_l)); //add Generic Detector
+    }
+    if(cc1=="DETe"){
         ss>>cc2;
         ss>>xpos;
         ss>>ypos;
         ss>>zpos;
         ss>>rot;
-        AddDetector(new electronDet(cc2,xpos*mm,ypos*mm,zpos*mm,rot,top_l)); //add Electron Detector
-        }
-        if(cc1=="DB"){
+        AddDetector(new electronDet(cc2,xpos*meter,ypos*meter,zpos*meter,rot,top_l)); //add Electron Detector
+    }
+    if(cc1=="DB"){
         ss>>cc2;
         ss>>xpos;
         ss>>ypos;
@@ -163,24 +163,31 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
         ss>>bfield;
         ss>>gradient;
         AddDetector(new BeamMagnetDipole(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,bfield*tesla, top_l));//add Dipole
+    }
+    if(cc1=="QF"){
+        ss>>cc2;
+        ss>>xpos;
+        ss>>ypos;
+        ss>>zpos;
+        ss>>r1;
+        ss>>r2;
+        ss>>dout;
+        ss>>length;
+        ss>>angle;
+        ss>>bfield;
+        ss>>gradient;
+        ss>>col1;
+        if(col1 == -7){ //-7 is a random invalid value for col1, so it will never be given in the mag file.
+            AddDetector(new BeamMagnetQuadrupole(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter,1,0,0,top_l));
         }
-        if(cc1=="QF"){
-        ss>>cc2;
-        ss>>xpos;
-        ss>>ypos;
-        ss>>zpos;
-        ss>>r1;
-        ss>>r2;
-        ss>>dout;
-        ss>>length;
-        ss>>angle;
-        ss>>bfield;
-        ss>>gradient;
-        AddDetector(new BeamMagnetQuadrupole(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter, 1,0,0,top_l)); //add Quadrupole
+        else{
+            ss>>col2;
+            ss>>col3;
+            AddDetector(new BeamMagnetQuadrupole(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter,col1,col2,col3,top_l));
+         //add Quadrupole
         }
     }
-    //8 9 10
-    else if(number==8){
+    if(cc1=="QFc"){
         ss>>cc2;
         ss>>xpos;
         ss>>ypos;
@@ -192,50 +199,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
         ss>>angle;
         ss>>bfield;
         ss>>gradient;
-        AddDetector(new BeamMagnetQuadrupole_cone(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter,0.09490926*meter,0.0125*meter,0.0125*meter,-14.029944,top_l));//add Quadrupole  0.014029944 shift 0.0042092594
+        ss>>shiftx;
+        ss>>rx;
+        ss>>ry;
+        ss>>conerot;
+        AddDetector(new BeamMagnetQuadrupole_cone(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter,shiftx*mm,rx*mm,ry*mm,conerot,top_l));//add Quadrupole cone  //0.014029944 shift 0.0042092594
     }
-    else if(number==9){
-        ss>>cc2;
-        ss>>xpos;
-        ss>>ypos;
-        ss>>zpos;
-        ss>>r1;
-        ss>>r2;
-        ss>>dout;
-        ss>>length;
-        ss>>angle;
-        ss>>bfield;
-        ss>>gradient;
-      AddDetector(new BeamMagnetQuadrupole_cone(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter,0.1706421*meter,0.02*meter,0.02*meter,-14.029944,top_l));
-    }
-    else if(number==10){
-        ss>>cc2;
-        ss>>xpos;
-        ss>>ypos;
-        ss>>zpos;
-        ss>>r1;
-        ss>>r2;
-        ss>>dout;
-        ss>>length;
-        ss>>angle;
-        ss>>bfield;
-        ss>>gradient;
-      AddDetector(new BeamMagnetQuadrupole_cone(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter,0.2422421*meter,0.025*meter,0.025*meter,-14.029944,top_l));
-    }
-    else if(number==14){
-        ss>>cc2;
-        ss>>xpos;
-        ss>>ypos;
-        ss>>zpos;
-        ss>>r1;
-        ss>>r2;
-        ss>>dout;
-        ss>>length;
-        ss>>angle;
-        ss>>bfield;
-        ss>>gradient;
-      AddDetector(new BeamMagnetQuadrupole(cc2,xpos*meter,ypos*meter,zpos*meter,length*meter,r1*meter,r2*meter,dout*meter,angle,gradient*tesla/meter, 0.5,0.5,0.5,top_l)); //add Quadrupole
-    } 
   }
 
   //photon det

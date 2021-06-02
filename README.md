@@ -27,4 +27,4 @@ By default run the simulation from the main directory.
 <pre><code> ./build/run </pre></code>
 
 ## Magnet files
-All objects in the simulation are defined in the magnet file, change magFile in init_vic.mac to specify the needed magnet file.
+All objects in the simulation are defined in the magnet file, change magFile/worldVol in init_vic.mac to specify the needed magnet file/world volume.
