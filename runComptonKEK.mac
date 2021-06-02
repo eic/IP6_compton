@@ -1,3 +1,8 @@
+/EPol/construct/worldVol_x 500000
+/EPol/construct/worldVol_y 20 meter
+/EPol/construct/worldVol_z 100000
+
+
 /EPol/construct/magFile kek_magnet.dat
 /EPol/input/name e7GeV_g532nm_Pz71_1e2ev_KEK.cr
 
@@ -13,5 +18,5 @@
 # Initialize kernel
 /run/initialize
 /compton/output/name o_deleteMe.root
-/run/beamOn 100
+/run/beamOn 100000
 

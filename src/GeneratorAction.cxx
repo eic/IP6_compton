@@ -34,6 +34,7 @@ GeneratorAction::GeneratorAction() : G4VUserPrimaryGeneratorAction(), fGun(0), f
   //fGun2->SetParticlePosition(G4ThreeVector(0, -0.2*cm, 0));
   fGun2->SetParticleEnergy(18*GeV);
 
+
 }//GeneratorAction
 
 //_____________________________________________________________________________

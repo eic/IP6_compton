@@ -49,6 +49,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
     G4bool fIncMagnet; // flag for spectrometer magnet
     G4bool fIncB2eR; // beamline dipole magnet
     G4bool fIncQF1;//beamline Quadrupole 
+    G4int worldVol_x = 20000; G4int worldVol_y = 20000; G4int worldVol_z = 200000; //x, y, z world volume elements, default EIC volume
 
 };
 
